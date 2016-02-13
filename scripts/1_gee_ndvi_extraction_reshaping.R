@@ -80,7 +80,7 @@ dat_$meta.site <- sub("_.*$", "", dat_$site)
 dat_$meta.subsite <- sub("^.*_", "", dat_$site)
 
 ## fine tuning of graph
-dat__ <- dat_ %>% filter(year >= 2000)
+dat__ <- dat_ %>% filter(year >= 2000, year <= 2015)
 dat__$stdDev.ndvi.val[is.na(dat__$stdDev.ndvi.val)] <- 0
 
 png(file.path(output.dir,"trends_in_mean_ndvi_meta.png"), width = 900, height = 900)
@@ -100,7 +100,8 @@ for(meta.site_ in unique(dat__$meta.site)){
     png(file.path(output.dir.bis, paste0("trends_in_mean_ndvi_",meta.site_, "_", buff.size_,".png")))
     gg <- ggplot(data = dat___, aes(x = year, y = mean.ndvi.val, ymin = mean.ndvi.val - stdDev.ndvi.val,
                                     ymax = mean.ndvi.val + stdDev.ndvi.val, col = source, lty = meta.subsite)) +
-      geom_point() + geom_smooth(method = 'lm', se = FALSE) + ylab("yearly max buffered averaged ndvi") + xlab('')
+      geom_point() + geom_smooth(method = 'lm', se = FALSE) + ylab("yearly max buffered averaged ndvi") + xlab('') +
+      coord_cartesian(ylim = c(0.1, 1))
     print(gg)
     dev.off()
   }
